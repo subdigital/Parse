@@ -2,7 +2,7 @@
 
 This pod is in the Fictorial CocoaPods Specs repo.
 
-    pod repo add fictorial git@github.com:fictorial/Specs.git
+    pod repo add fictorial git://github.com/fictorial/Specs.git
 
 Add this pod as a dependency in your project's Podfile:
 
