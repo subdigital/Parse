@@ -1,0 +1,26 @@
+#!/bin/sh
+
+# You have to be logged into Parse's website to get the latest 
+# from this URL: https://www.parse.com/downloads/ios/parse-library/latest
+# Do that and download to ~/Downloads (and it should be automatically unzipped)
+
+if [ -e ~/Downloads/Parse.framework ]; then
+    # Swap out old version for latest
+
+    git rm -rf Parse.framework
+    mv ~/Downloads/Parse.framework .
+    git add Parse.framework
+    version=$(ack -o 'PARSE_VERSION.+' Parse.framework/Headers/PFConstants.h | cut -d@ -f2 | sed -e 's/"//g')
+    git commit -am "Update to version $version"
+    git tag $version
+    git push --tags origin master
+
+    # Now go update our CocoaPods specs to add this new version
+
+    cd ~/Projects/CocoaPods-Specs/Parse
+    cp -pr 1.0.43 $version
+    perl -pi -e "s/1.0.43/$version/g" $version/Parse.podspec
+    git add $version
+    git commit -am "Update to version $version"
+    git push origin master
+fi
