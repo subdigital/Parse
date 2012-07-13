@@ -11,9 +11,6 @@ if [ -e ~/Downloads/Parse.framework ]; then
     mv ~/Downloads/Parse.framework .
     git add Parse.framework
     version=$(ack -o 'PARSE_VERSION.+' Parse.framework/Headers/PFConstants.h | cut -d@ -f2 | sed -e 's/"//g')
-    git commit -am "Update to version $version"
-    git tag $version
-    git push --tags origin master
 
     # Now go update our CocoaPods specs to add this new version
 
@@ -23,4 +20,12 @@ if [ -e ~/Downloads/Parse.framework ]; then
     git add $version
     git commit -am "Update to version $version"
     git push origin master
+
+    # come back and update the local podspec
+
+    cd -
+    cp ~/Projects/CocoaPods-Specs/Parse/$version/Parse.podspec .
+    git push --tags origin master
+    git commit -am "Update to version $version"
+    git tag $version
 fi
